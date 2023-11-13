@@ -24,9 +24,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [userToken, setUserToken] = useState<string | null>(null);
 
   const signIn = async (email: string, password: string) => {
-    const token = await fakeApiSignIn(email, password);
-    setUserToken(token);
-    await SecureStore.setItemAsync("userToken", token);
+    try {
+      const response = await fetch("http://192.168.0.115:8080/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const textResponse = await response.text(); // Read the response as text
+        console.error("Login error response:", textResponse);
+        throw new Error("Network response was not ok");
+      }
+
+      const token = await response.text(); // Directly reading the response as text
+      if (token.startsWith("Bearer ")) {
+        const actualToken = token.split(" ")[1];
+        setUserToken(actualToken);
+        await SecureStore.setItemAsync("userToken", actualToken);
+      } else {
+        throw new Error("Invalid token format");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      // Handle login errors appropriately
+    }
   };
 
   const signOut = async () => {
@@ -35,23 +59,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const signUp = async (email: string, password: string) => {
-    const token = await fakeApiSignUp(email, password);
-    setUserToken(token);
-    await SecureStore.setItemAsync("userToken", token);
-  };
-
-  const fakeApiSignIn = async (
-    email: string,
-    password: string
-  ): Promise<string> => {
-    return `token_${email}`;
-  };
-
-  const fakeApiSignUp = async (
-    email: string,
-    password: string
-  ): Promise<string> => {
-    return `token_${email}`;
+    // Implement your sign-up logic here
+    // Similar to signIn, but for user registration
   };
 
   return (
@@ -60,3 +69,5 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     </AuthContext.Provider>
   );
 };
+
+export default AuthProvider;
