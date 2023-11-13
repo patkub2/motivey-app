@@ -6,7 +6,7 @@ interface AuthContextType {
   userToken: string | null;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
+  signUp: (name: string, email: string, password: string) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -58,9 +58,34 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     await SecureStore.deleteItemAsync("userToken");
   };
 
-  const signUp = async (email: string, password: string) => {
-    // Implement your sign-up logic here
-    // Similar to signIn, but for user registration
+  // Part of AuthContext.tsx
+
+  const signUp = async (name: string, email: string, password: string) => {
+    try {
+      const response = await fetch("http://192.168.0.115:8080/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      if (!response.ok) {
+        const textResponse = await response.text();
+        console.error("Register error response:", textResponse);
+        throw new Error("Network response was not ok");
+      }
+
+      // Handle the response. For now, let's log it.
+      const data = await response.json();
+      console.log("Registration successful:", data);
+
+      // You can choose to automatically sign in the user after registration
+      // or navigate them to the login screen to log in manually.
+    } catch (error) {
+      console.error("Registration error:", error);
+      // Handle registration errors appropriately
+    }
   };
 
   return (
