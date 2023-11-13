@@ -1,9 +1,9 @@
 // RegisterScreen.tsx
 import React, { useState, useContext } from "react";
-import { View, TextInput, Button, StyleSheet } from "react-native";
-import { AuthContext } from "../../context/AuthContext"; // Adjust the path as needed
+import { View, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { AuthContext } from "../../context/AuthContext";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../../types/navigation"; // Adjust the path as needed
+import { RootStackParamList } from "../../types/navigation";
 
 type RegisterScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -20,8 +20,39 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
   const [password, setPassword] = useState<string>("");
   const { signUp } = useContext(AuthContext);
 
-  const handleRegister = () => {
-    signUp(name, email, password);
+  const handleRegister = async () => {
+    try {
+      await signUp(name, email, password);
+      Alert.alert(
+        "Registration Successful",
+        "You have been successfully registered!",
+        [{ text: "OK", onPress: () => navigation.navigate("Login") }]
+      );
+      setName("");
+      setEmail("");
+      setPassword("");
+      setTimeout(() => {
+        navigation.navigate("Login");
+      }, 1000);
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message === "UserAlreadyExists") {
+          Alert.alert(
+            "Registration Failed",
+            "A user with this email already exists."
+          );
+        } else {
+          // Handle other types of errors
+          Alert.alert(
+            "Registration Failed",
+            "An error occurred during registration: " + error.message
+          );
+        }
+      } else {
+        // Handle cases where the caught object is not an Error instance
+        Alert.alert("Registration Failed", "An unexpected error occurred.");
+      }
+    }
   };
 
   return (
