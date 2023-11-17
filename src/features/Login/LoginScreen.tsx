@@ -30,6 +30,9 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
     signIn(email, password);
   };
 
+  const handleLoginDev = () => {
+    signIn("test@test.com", "test");
+  };
   return (
     <View style={styles.container}>
       <Image source={require("../../../assets/icon.png")} style={styles.logo} />
@@ -52,6 +55,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
       <TouchableOpacity onPress={() => navigation.navigate("Register")}>
         <Text>Don't have an account? Register</Text>
       </TouchableOpacity>
+      <Button title="Log In Development" onPress={handleLoginDev} />
     </View>
   );
 };
