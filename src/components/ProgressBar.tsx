@@ -7,6 +7,8 @@ type ProgressBarProps = {
   value: number;
   color: string;
   height: number;
+  borderColor?: string; // Optional prop for border color
+  showText?: boolean; // Optional prop to control text visibility
 };
 
 const Container = styled(YStack, {
@@ -16,6 +18,7 @@ const Container = styled(YStack, {
   backgroundColor: "#E0E0E0",
   position: "relative",
   justifyContent: "center",
+  borderWidth: 3,
 });
 
 const Filler = styled(XStack, {
@@ -38,16 +41,22 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   maxValue,
   value,
   color,
-  height, // Destructure height from props
+  height,
+  borderColor = "transparent", // Default border color is transparent
+  showText = true, // Default value is true
 }) => {
   // Calculate width of the filler element as a percentage of the total width
   const widthPercentage = (value / maxValue) * 100;
   const fillerWidth = (widthPercentage * maxWidth) / 100;
 
   return (
-    <Container width={maxWidth} height={height}>
+    <Container
+      width={maxWidth}
+      height={height}
+      style={{ borderColor: borderColor }} // Apply the dynamic border color
+    >
       <Filler width={fillerWidth} style={{ backgroundColor: color }} />
-      <Label>{`${value}/${maxValue}`}</Label>
+      {showText && <Label>{`${value}/${maxValue}`}</Label>}
     </Container>
   );
 };
