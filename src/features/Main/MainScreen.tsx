@@ -5,8 +5,14 @@ import ProgressBar from "../../components/ProgressBar";
 const MainScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.welcomeText}>Welcome</Text>
-      <ProgressBar value={50} color="blue" text="Progress" />
+      <Text style={styles.welcomeText}>Welasdasdcome</Text>
+      <ProgressBar
+        maxWidth={180}
+        maxValue={180}
+        value={15}
+        color="#FFCC00"
+        height={20}
+      />
     </View>
   );
 };

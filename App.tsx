@@ -5,6 +5,9 @@ import AppNavigator from "./src/navigation/AppNavigator";
 import MainScreen from "./src/features/Main/MainScreen";
 import { AuthContext, AuthProvider } from "./src/context/AuthContext"; // You need to create this
 
+import { TamaguiProvider } from "tamagui";
+
+import config from "./tamagui.config";
 const AppContent = () => {
   const { userToken } = useContext(AuthContext); // userToken is null when not logged in
 
@@ -18,7 +21,9 @@ const AppContent = () => {
 export default function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <TamaguiProvider config={config}>
+        <AppContent />
+      </TamaguiProvider>
     </AuthProvider>
   );
 }
