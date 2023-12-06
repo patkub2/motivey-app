@@ -1,5 +1,5 @@
 import React from "react";
-import { YStack, XStack, styled, Text } from "tamagui";
+import { Stack, styled, Text } from "tamagui";
 
 type ProgressBarProps = {
   maxWidth: number;
@@ -11,7 +11,7 @@ type ProgressBarProps = {
   showText?: boolean; // Optional prop to control text visibility
 };
 
-const Container = styled(YStack, {
+const Container = styled(Stack, {
   width: "100%",
   borderRadius: 9999,
   overflow: "hidden",
@@ -21,7 +21,7 @@ const Container = styled(YStack, {
   borderWidth: 3,
 });
 
-const Filler = styled(XStack, {
+const Filler = styled(Stack, {
   height: "100%",
   borderRadius: 9999,
 });
@@ -47,15 +47,11 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 }) => {
   // Calculate width of the filler element as a percentage of the total width
   const widthPercentage = (value / maxValue) * 100;
-  const fillerWidth = (widthPercentage * maxWidth) / 100;
+  const fillerWidth = `${widthPercentage}%`; // Use a string to set the width as a percentage
 
   return (
-    <Container
-      width={maxWidth}
-      height={height}
-      style={{ borderColor: borderColor }} // Apply the dynamic border color
-    >
-      <Filler width={fillerWidth} style={{ backgroundColor: color }} />
+    <Container width={maxWidth} height={height} style={{ borderColor }}>
+      <Filler style={{ width: fillerWidth, backgroundColor: color }} />
       {showText && <Label>{`${value}/${maxValue}`}</Label>}
     </Container>
   );

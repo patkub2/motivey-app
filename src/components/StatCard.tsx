@@ -1,22 +1,23 @@
 import React from "react";
-import { YStack, XStack, styled, Text } from "tamagui";
+import { Stack, styled, Text } from "tamagui";
 import ProgressBar from "./ProgressBar";
 
 type StatCardProps = {
   icon: React.ReactNode; // This allows you to pass any React element as an icon
   stat: string; // The label for the stat, e.g., "STR"
-  minValue: number; // The minimum value for the progress bar
+  minValue?: number; // Optional: The minimum value for the progress bar
   maxValue: number; // The maximum value for the progress bar
   value: number; // The current value for the progress bar
   level: number; // The level number to display
 };
 
-const Card = styled(YStack, {
+const Card = styled(Stack, {
   padding: 8,
   borderRadius: 10,
-  borderWidth: 3, // Add border
-  borderColor: "#CEBEB3", // Border color is black
+  borderWidth: 3,
+  borderColor: "#CEBEB3",
   backgroundColor: "#EFECE2",
+  flexDirection: "column", // Align children vertically
 });
 
 const StatLabel = styled(Text, {
@@ -39,9 +40,9 @@ const StatCard: React.FC<StatCardProps> = ({
 }) => {
   return (
     <Card>
-      <YStack alignItems="center" justifyContent="center">
+      <Stack alignItems="center" justifyContent="center">
         {icon}
-      </YStack>
+      </Stack>
       <StatLabel alignSelf="center">{stat}</StatLabel>
       <ProgressBar
         maxWidth={100}
