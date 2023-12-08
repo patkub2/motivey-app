@@ -4,6 +4,8 @@ import ProgressBar from "../../components/ProgressBar";
 import StatCard from "../../components/StatCard";
 import Icon from "../../components/Icon";
 import TaskCard from "../../components/TaskCard";
+import TamaguiButton from "../../components/TamaguiButton";
+import ButtonSection from "../../components/ButtonSection";
 
 const MainScreen = () => {
   return (
@@ -29,18 +31,20 @@ const MainScreen = () => {
         value={50}
         level={5}
       />
+      <TamaguiButton text="Click me" color="#FFCC00" />
       <TaskCard
         executionsCount={12}
         icon={
           <Icon
-            source={require("../../assets/images/test.png")}
-            style={{ width: 50, height: 50 }}
+            source={require("../../assets/images/sword.png")}
+            style={{ width: 40, height: 40 }}
           />
         } // Replace with your actual icon component
         name="10 Push ups"
         description="some text"
         difficultyLevel={3} // Renders 3 coin icons
       />
+      <ButtonSection />
     </View>
   );
 };
@@ -51,6 +55,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#FFFFF6",
+    borderWidth: 1,
+    borderBlockColor: "red",
   },
   welcomeText: {
     fontSize: 24,

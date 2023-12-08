@@ -12,6 +12,8 @@ type TaskCardProps = {
 const Card = styled(Stack, {
   padding: 10,
   borderRadius: 8,
+  borderWidth: 3,
+  borderColor: "#E0E0E0",
   backgroundColor: "white",
   flexDirection: "row",
   alignItems: "center",
@@ -35,6 +37,11 @@ const TaskName = styled(Text, {
 
 const TaskDescription = styled(Text, {
   color: "#555",
+});
+
+const TaskContainer = styled(Stack, {
+  flexDirection: "column",
+  paddingLeft: 10,
 });
 
 const Difficulty = styled(Stack, {
@@ -64,16 +71,14 @@ const TaskCard: React.FC<TaskCardProps> = ({
   return (
     <Card>
       <TaskInfo>
-        {/* Use Stack for the row layout instead of YStack */}
         <Stack flexDirection="row" alignItems="center">
           {icon}
-          <Stack flexDirection="column">
+          <TaskContainer>
             <TaskName>{`${executionsCount}x ${name}`}</TaskName>
             <TaskDescription>{description}</TaskDescription>
-          </Stack>
+          </TaskContainer>
         </Stack>
       </TaskInfo>
-      {/* Difficulty is already a Stack with flexDirection "row" */}
       <Difficulty>{coins}</Difficulty>
     </Card>
   );
