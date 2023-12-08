@@ -45,7 +45,7 @@ const StatCard: React.FC<StatCardProps> = ({
       </Stack>
       <StatLabel alignSelf="center">{stat}</StatLabel>
       <ProgressBar
-        maxWidth={100}
+        // maxWidth={100}
         maxValue={maxValue}
         value={value}
         color="#3B577D"

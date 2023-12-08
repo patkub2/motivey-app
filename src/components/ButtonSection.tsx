@@ -38,7 +38,6 @@ const ButtonContainer = styled(Stack, {
   padding: 10,
   flexDirection: "row",
   justifyContent: "space-between",
-  borderWidth: 1,
 });
 
 const Container = styled(Stack, {

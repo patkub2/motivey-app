@@ -2,7 +2,7 @@ import React from "react";
 import { Stack, styled, Text } from "tamagui";
 
 type ProgressBarProps = {
-  maxWidth: number;
+  maxWidth?: number;
   maxValue: number;
   value: number;
   color: string;
