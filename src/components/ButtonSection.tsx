@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { Button, Stack, styled, Text, ScrollView, Image } from "tamagui";
 import { AuthContext } from "../context/AuthContext"; // You'll need to implement this
 import TaskCard from "./TaskCard";
 import { Swipeable } from "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { View } from "tamagui";
 
 type Task = {
   id: number;
@@ -67,6 +69,30 @@ const ButtonSection = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const { userToken } = useContext(AuthContext);
 
+  const fetchTasks = useCallback(async () => {
+    if (!userToken) return;
+
+    try {
+      const response = await fetch("http://192.168.0.115:8080/api/tasks", {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP status ${response.status}: ${errorText}`);
+      }
+      const tasksData: Task[] = await response.json();
+      setTasks(tasksData);
+    } catch (error) {
+      console.error("Error fetching tasks:", error.message);
+    }
+  }, [userToken]);
+
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
+
   const handleSwipeRight = async (taskId: number) => {
     try {
       const response = await fetch(
@@ -81,35 +107,16 @@ const ButtonSection = () => {
       if (!response.ok) {
         throw new Error("Failed to increment counter");
       }
-      // Optionally, refresh or update tasks state here
+      await fetchTasks();
     } catch (error) {
       console.error("Error incrementing counter:", error);
     }
   };
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await fetch("http://192.168.0.115:8080/api/tasks", {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        });
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`HTTP status ${response.status}: ${errorText}`);
-        }
-        const tasksData: Task[] = await response.json();
-        setTasks(tasksData);
-      } catch (error) {
-        console.error("Error fetching tasks:", error.message);
-      }
-    };
-
-    if (userToken) {
-      fetchTasks();
-    }
-  }, [userToken]);
+  const renderRightActions = () => {
+    // Return an empty view or a view with desired width to control swipe distance
+    return <View style={{ width: 1 }}></View>;
+  };
 
   const renderTasks = (section: Section) => {
     return tasks
@@ -117,11 +124,14 @@ const ButtonSection = () => {
       .map((task) => (
         <Swipeable
           key={task.id}
+          renderRightActions={renderRightActions}
           onSwipeableOpen={(direction) => {
-            if (direction === "right") {
+            if (direction == "right") {
+              console.log("Swiped right" + task.id);
               handleSwipeRight(task.id);
             }
           }}
+          friction={2}
         >
           <TaskCard
             executionsCount={task.dailyExecutionCounter}
@@ -133,7 +143,7 @@ const ButtonSection = () => {
               />
             }
             name={task.name}
-            description="test" // Update with actual description if available
+            description="test"
             difficultyLevel={task.difficultyLevel}
           />
         </Swipeable>
