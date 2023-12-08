@@ -1,87 +1,147 @@
-import React, { useState } from "react";
-import { Button, Stack, styled, Text } from "tamagui";
+import React, { useState, useEffect, useContext } from "react";
+import { Button, Stack, styled, Text, ScrollView, Image } from "tamagui";
+import { AuthContext } from "../context/AuthContext"; // You'll need to implement this
+import TaskCard from "./TaskCard";
 
-// Define a styled container for the sections
+type Task = {
+  id: number;
+  name: string;
+  section: "HABITS" | "CHALLENGES" | "GOALS";
+  difficultyLevel: number;
+  experience: number;
+  dailyExecutionCounter: number;
+  completed: boolean;
+  type: string;
+  icon: string; // Assuming this is a path to an image file
+};
+
+type Section = "HABITS" | "CHALLENGES" | "GOALS";
+
 const SectionContainer = styled(Stack, {
   // Styles for your section container
   padding: 10,
   width: "100%",
+  // Ensure the container takes up the full available height minus the button container height
+  flex: 1,
 });
 
-const ContentSection = styled(Stack, {
-  // Styles for each content section
-  padding: 10,
-  // You may want to add display: 'none' to hide inactive sections or handle visibility through React state
+const ContentSection = styled(ScrollView, {
+  // Styles for the scrollable content section
+  height: 200, // Set a static height for the content section
 });
 
-const ButtonConteiner = styled(Stack, {
-  // Styles for each content section
+const ButtonContainer = styled(Stack, {
+  // Styles for the button container
   padding: 10,
   flexDirection: "row",
   justifyContent: "space-between",
   borderWidth: 1,
-  // You may want to add display: 'none' to hide inactive sections or handle visibility through React state
 });
 
-const Conteiner = styled(Stack, {
-  // Styles for each content section
+const Container = styled(Stack, {
+  // Styles for the outer container
   width: "100%",
   borderWidth: 1,
-  // You may want to add display: 'none' to hide inactive sections or handle visibility through React state
+  flexDirection: "column", // Stack children vertically
+  flex: 1, // Ensure it fills the screen, adjust as necessary
 });
 
 const ButtonSection = () => {
-  const [activeSection, setActiveSection] = useState("section1");
+  const [activeSection, setActiveSection] = useState<Section>("HABITS");
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const { userToken } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch("http://192.168.0.115:8080/api/tasks", {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        });
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`HTTP status ${response.status}: ${errorText}`);
+        }
+        const tasksData: Task[] = await response.json();
+        setTasks(tasksData);
+      } catch (error) {
+        console.error("Error fetching tasks:", error.message);
+      }
+    };
+
+    if (userToken) {
+      fetchTasks();
+    }
+  }, [userToken]);
+
+  const renderTasks = (section: "HABITS" | "CHALLENGES" | "GOALS") => {
+    return tasks
+      .filter((task) => task.section === section)
+      .map((task) => (
+        <TaskCard
+          key={task.id}
+          executionsCount={task.dailyExecutionCounter}
+          icon={
+            <Image
+              source={{ uri: task.icon }}
+              style={{ width: 20, height: 20 }}
+            />
+          }
+          name={task.name}
+          description="test" // Ensure description is part of your task data
+          difficultyLevel={task.difficultyLevel}
+        />
+      ));
+  };
 
   return (
-    <Conteiner>
-      <ButtonConteiner>
+    <Container>
+      <ButtonContainer>
         <Button
-          onPress={() => setActiveSection("section1")}
-          // Change the background color based on the active state
-          // Adjust the styling to match your design
+          onPress={() => setActiveSection("HABITS")}
           style={{
-            backgroundColor: activeSection === "section1" ? "blue" : "grey",
+            backgroundColor: activeSection === "HABITS" ? "blue" : "grey",
           }}
         >
-          Section 1
+          HABITS
         </Button>
         <Button
-          onPress={() => setActiveSection("section2")}
+          onPress={() => setActiveSection("CHALLENGES")}
           style={{
-            backgroundColor: activeSection === "section2" ? "blue" : "grey",
+            backgroundColor: activeSection === "CHALLENGES" ? "blue" : "grey",
           }}
         >
-          Section 2
+          CHALLENGES
         </Button>
         <Button
-          onPress={() => setActiveSection("section3")}
+          onPress={() => setActiveSection("GOALS")}
           style={{
-            backgroundColor: activeSection === "section3" ? "blue" : "grey",
+            backgroundColor: activeSection === "GOALS" ? "blue" : "grey",
           }}
         >
-          Section 3
+          GOALS
         </Button>
-      </ButtonConteiner>
+      </ButtonContainer>
 
       <SectionContainer>
-        {activeSection === "section1" && (
-          <ContentSection>
-            <Text>Content for Section 1</Text>
+        {activeSection === "HABITS" && (
+          <ContentSection horizontal={false}>
+            {renderTasks("HABITS")}
           </ContentSection>
         )}
-        {activeSection === "section2" && (
-          <ContentSection>
-            <Text>Content for Section 2</Text>
+        {activeSection === "CHALLENGES" && (
+          <ContentSection horizontal={false}>
+            {renderTasks("CHALLENGES")}
           </ContentSection>
         )}
-        {activeSection === "section3" && (
-          <ContentSection>
-            <Text>Content for Section 3</Text>
+        {activeSection === "GOALS" && (
+          <ContentSection horizontal={false}>
+            {renderTasks("GOALS")}
           </ContentSection>
         )}
       </SectionContainer>
-    </Conteiner>
+    </Container>
   );
 };
 
