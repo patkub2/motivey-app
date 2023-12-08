@@ -72,9 +72,10 @@ const TaskCard: React.FC<TaskCardProps> = ({
     <Card>
       <TaskInfo>
         <Stack flexDirection="row" alignItems="center">
+          <TaskName>{`${executionsCount}x`}</TaskName>
           {icon}
           <TaskContainer>
-            <TaskName>{`${executionsCount}x ${name}`}</TaskName>
+            <TaskName>{`${name}`}</TaskName>
             <TaskDescription>{description}</TaskDescription>
           </TaskContainer>
         </Stack>

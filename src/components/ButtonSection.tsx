@@ -46,6 +46,21 @@ const Container = styled(Stack, {
   flex: 1, // Ensure it fills the screen, adjust as necessary
 });
 
+const getIconForType = (type: string) => {
+  switch (type) {
+    case "INT":
+      return require("../assets/images/book.png");
+    case "STR":
+      return require("../assets/images/sword.png");
+    case "AGI":
+      return require("../assets/images/coinred.png");
+    case "VIT":
+      return require("../assets/images/potion.png");
+    default:
+      return require("../assets/images/test.png"); // Default icon if type doesn't match
+  }
+};
+
 const ButtonSection = () => {
   const [activeSection, setActiveSection] = useState<Section>("HABITS");
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -75,7 +90,7 @@ const ButtonSection = () => {
     }
   }, [userToken]);
 
-  const renderTasks = (section: "HABITS" | "CHALLENGES" | "GOALS") => {
+  const renderTasks = (section: Section) => {
     return tasks
       .filter((task) => task.section === section)
       .map((task) => (
@@ -84,12 +99,13 @@ const ButtonSection = () => {
           executionsCount={task.dailyExecutionCounter}
           icon={
             <Image
-              source={{ uri: task.icon }}
-              style={{ width: 20, height: 20 }}
+              source={getIconForType(task.type)}
+              style={{ width: 30, marginHorizontal: 5, height: 30 }}
+              resizeMode="center" // Set resizeMode as a separate prop
             />
           }
           name={task.name}
-          description="test" // Ensure description is part of your task data
+          description="test" // Update with actual description if available
           difficultyLevel={task.difficultyLevel}
         />
       ));
