@@ -14,9 +14,32 @@ type User = {
 };
 
 const UserStatsContainer = styled(Stack, {
-  // Styles for the user stats container
+  // Enhanced styles for the user stats container
   padding: 10,
+  marginTop: 40, // Add top padding
+  alignItems: "center", // Center the content
   flexDirection: "column",
+});
+
+const LevelText = styled(Text, {
+  // Styling for the level text
+  marginHorizontal: 10, // Add horizontal margin for spacing
+  alignSelf: "center", // Center the text
+});
+
+const ProgressBarContainer = styled(Stack, {
+  // Container for individual progress bars
+  width: "100%",
+  marginBottom: 5, // Add margin at the bottom
+});
+
+const StatsRow = styled(Stack, {
+  // Styling for the row containing HP and Mana bars
+  flexDirection: "row",
+  justifyContent: "space-evenly", // Space elements evenly
+  width: "100%",
+  marginTop: 5, // Add top margin for spacing
+  // borderWidth: 1,
 });
 
 const UserStats = () => {
@@ -50,33 +73,35 @@ const UserStats = () => {
     <UserStatsContainer>
       {user && (
         <>
-          <ProgressBar
-            maxWidth={300}
-            maxValue={user.maxExp}
-            value={user.currentExp}
-            color="blue"
-            height={30}
-            showText={true}
-          />
-          <Stack flexDirection="row" justifyContent="space-between">
+          <ProgressBarContainer>
+            <ProgressBar
+              maxWidth={300}
+              maxValue={user.maxExp}
+              value={user.currentExp}
+              color="yellow"
+              height={20}
+              showText={true}
+            />
+          </ProgressBarContainer>
+          <StatsRow>
             <ProgressBar
               maxWidth={140}
               maxValue={user.maxHp}
               value={user.currentHp}
               color="red"
-              height={25}
+              height={20}
               showText={true}
             />
-            <Text>Level: {user.characterLevel}</Text>
+            <LevelText>Level: {user.characterLevel}</LevelText>
             <ProgressBar
               maxWidth={140}
               maxValue={user.maxMana}
               value={user.currentMana}
-              color="purple"
-              height={25}
+              color="blue"
+              height={20}
               showText={true}
             />
-          </Stack>
+          </StatsRow>
         </>
       )}
     </UserStatsContainer>
