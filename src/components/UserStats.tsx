@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Stack, styled, Text } from "tamagui";
+import { Image, Stack, styled, Text } from "tamagui";
 import ProgressBar from "./ProgressBar"; // Import your ProgressBar component
 import { AuthContext } from "../context/AuthContext"; // Assuming you have this context
+import StatCard from "./StatCard";
+import Icon from "./Icon";
 
 type User = {
   characterLevel: number;
@@ -40,6 +42,12 @@ const StatsRow = styled(Stack, {
   width: "100%",
   marginTop: 5, // Add top margin for spacing
   // borderWidth: 1,
+});
+
+const HeroSectionContainer = styled(Stack, {
+  flexDirection: "row", // Horizontal layout
+  justifyContent: "space-between",
+  padding: 10,
 });
 
 const UserStats = () => {
@@ -104,6 +112,68 @@ const UserStats = () => {
           </StatsRow>
         </>
       )}
+      <HeroSectionContainer>
+        <Stack flex={1} flexDirection="column">
+          <StatCard
+            icon={
+              <Icon
+                source={require("../assets/images/sword.png")}
+                style={{ width: 40, height: 40 }}
+              />
+            }
+            stat="STR"
+            maxValue={100}
+            value={70}
+            level={10}
+          />
+          <StatCard
+            icon={
+              <Icon
+                source={require("../assets/images/sword.png")}
+                style={{ width: 40, height: 40 }}
+              />
+            }
+            stat="AGI"
+            maxValue={100}
+            value={60}
+            level={10}
+          />
+        </Stack>
+
+        <Stack flex={2} alignItems="center" justifyContent="center">
+          <Image
+            source={require("../assets/armour/fox/SteelPlatedArmor.png")}
+            style={{ width: 200, height: 280, zIndex: -1 }}
+          />
+        </Stack>
+
+        <Stack flex={1} flexDirection="column">
+          <StatCard
+            icon={
+              <Icon
+                source={require("../assets/images/sword.png")}
+                style={{ width: 40, height: 40 }}
+              />
+            }
+            stat="INT"
+            maxValue={100}
+            value={80}
+            level={10}
+          />
+          <StatCard
+            icon={
+              <Icon
+                source={require("../assets/images/sword.png")}
+                style={{ width: 40, height: 40 }}
+              />
+            }
+            stat="VIT"
+            maxValue={100}
+            value={90}
+            level={10}
+          />
+        </Stack>
+      </HeroSectionContainer>
     </UserStatsContainer>
   );
 };
