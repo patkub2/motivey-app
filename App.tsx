@@ -6,6 +6,7 @@ import AppContent from "./AppContent"; // Adjust the path if necessary
 import config from "./tamagui.config";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -23,10 +24,12 @@ export default function App() {
   SplashScreen.hideAsync().catch(console.warn);
 
   return (
-    <AuthProvider>
-      <TamaguiProvider config={config}>
-        <AppContent />
-      </TamaguiProvider>
-    </AuthProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AuthProvider>
+        <TamaguiProvider config={config}>
+          <AppContent />
+        </TamaguiProvider>
+      </AuthProvider>
+    </GestureHandlerRootView>
   );
 }

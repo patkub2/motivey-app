@@ -10,7 +10,7 @@ dependencies:
     version: 6.9.17(@react-navigation/native@6.1.9)(react-native-safe-area-context@4.6.3)(react-native-screens@3.22.1)(react-native@0.72.6)(react@18.2.0)
   '@react-navigation/stack':
     specifier: ^6.3.20
-    version: 6.3.20(@react-navigation/native@6.1.9)(react-native-gesture-handler@2.13.4)(react-native-safe-area-context@4.6.3)(react-native-screens@3.22.1)(react-native@0.72.6)(react@18.2.0)
+    version: 6.3.20(@react-navigation/native@6.1.9)(react-native-gesture-handler@2.12.1)(react-native-safe-area-context@4.6.3)(react-native-screens@3.22.1)(react-native@0.72.6)(react@18.2.0)
   '@tamagui/config':
     specifier: ^1.79.6
     version: 1.79.6(react-dom@18.2.0)(react-native-reanimated@3.6.1)(react-native@0.72.6)(react@18.2.0)
@@ -41,6 +41,9 @@ dependencies:
   react-native:
     specifier: 0.72.6
     version: 0.72.6(@babel/core@7.20.2)(@babel/preset-env@7.23.2)(react@18.2.0)
+  react-native-gesture-handler:
+    specifier: ^2.12.1
+    version: 2.12.1(react-native@0.72.6)(react@18.2.0)
   react-native-safe-area-context:
     specifier: 4.6.3
     version: 4.6.3(react-native@0.72.6)(react@18.2.0)
@@ -2300,7 +2303,7 @@ packages:
       nanoid: 3.3.6
     dev: false
 
-  /@react-navigation/stack@6.3.20(@react-navigation/native@6.1.9)(react-native-gesture-handler@2.13.4)(react-native-safe-area-context@4.6.3)(react-native-screens@3.22.1)(react-native@0.72.6)(react@18.2.0):
+  /@react-navigation/stack@6.3.20(@react-navigation/native@6.1.9)(react-native-gesture-handler@2.12.1)(react-native-safe-area-context@4.6.3)(react-native-screens@3.22.1)(react-native@0.72.6)(react@18.2.0):
     resolution: {integrity: sha512-vE6mgZzOgoa5Uy7ayT97Cj+ZIK7DK+JBYVuKUViILlWZy6IWK7HFDuqoChSbZ1ajTIfAxj/acVGg1jkbAKsToA==}
     peerDependencies:
       '@react-navigation/native': ^6.0.0
@@ -2315,7 +2318,7 @@ packages:
       color: 4.2.3
       react: 18.2.0
       react-native: 0.72.6(@babel/core@7.20.2)(@babel/preset-env@7.23.2)(react@18.2.0)
-      react-native-gesture-handler: 2.13.4(react-native@0.72.6)(react@18.2.0)
+      react-native-gesture-handler: 2.12.1(react-native@0.72.6)(react@18.2.0)
       react-native-safe-area-context: 4.6.3(react-native@0.72.6)(react@18.2.0)
       react-native-screens: 3.22.1(react-native@0.72.6)(react@18.2.0)
       warn-once: 0.1.1
@@ -6845,8 +6848,8 @@ packages:
   /react-is@18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
 
-  /react-native-gesture-handler@2.13.4(react-native@0.72.6)(react@18.2.0):
-    resolution: {integrity: sha512-smpYOVbvWABpq2H+lmDnfOLCTH934aUPO1w2/pQXvm1j+M/vmGQmvgRDJOpXcks17HLtNNKXD6tcODf3aPqDfA==}
+  /react-native-gesture-handler@2.12.1(react-native@0.72.6)(react@18.2.0):
+    resolution: {integrity: sha512-deqh36bw82CFUV9EC4tTo2PP1i9HfCOORGS3Zmv71UYhEZEHkzZv18IZNPB+2Awzj45vLIidZxGYGFxHlDSQ5A==}
     peerDependencies:
       react: '*'
       react-native: '*'

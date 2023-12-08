@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Button, Stack, styled, Text, ScrollView, Image } from "tamagui";
 import { AuthContext } from "../context/AuthContext"; // You'll need to implement this
 import TaskCard from "./TaskCard";
+import { Swipeable } from "react-native-gesture-handler";
 
 type Task = {
   id: number;
@@ -66,6 +67,26 @@ const ButtonSection = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const { userToken } = useContext(AuthContext);
 
+  const handleSwipeRight = async (taskId: number) => {
+    try {
+      const response = await fetch(
+        `http://192.168.0.115:8080/api/task/${taskId}/increment-counter`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to increment counter");
+      }
+      // Optionally, refresh or update tasks state here
+    } catch (error) {
+      console.error("Error incrementing counter:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -94,20 +115,28 @@ const ButtonSection = () => {
     return tasks
       .filter((task) => task.section === section)
       .map((task) => (
-        <TaskCard
+        <Swipeable
           key={task.id}
-          executionsCount={task.dailyExecutionCounter}
-          icon={
-            <Image
-              source={getIconForType(task.type)}
-              style={{ width: 30, marginHorizontal: 5, height: 30 }}
-              resizeMode="center" // Set resizeMode as a separate prop
-            />
-          }
-          name={task.name}
-          description="test" // Update with actual description if available
-          difficultyLevel={task.difficultyLevel}
-        />
+          onSwipeableOpen={(direction) => {
+            if (direction === "right") {
+              handleSwipeRight(task.id);
+            }
+          }}
+        >
+          <TaskCard
+            executionsCount={task.dailyExecutionCounter}
+            icon={
+              <Image
+                source={getIconForType(task.type)}
+                style={{ width: 30, marginHorizontal: 5, height: 30 }}
+                resizeMode="center"
+              />
+            }
+            name={task.name}
+            description="test" // Update with actual description if available
+            difficultyLevel={task.difficultyLevel}
+          />
+        </Swipeable>
       ));
   };
 

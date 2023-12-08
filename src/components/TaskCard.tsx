@@ -48,6 +48,9 @@ const Difficulty = styled(Stack, {
   flexDirection: "row",
 });
 
+const Container = styled(Card, {
+  marginBottom: 8,
+});
 // Assuming you have a 'coin.png' in your assets to represent the difficulty
 const CoinIcon = () => (
   <Image
@@ -69,7 +72,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
   ));
 
   return (
-    <Card>
+    <Container>
       <TaskInfo>
         <Stack flexDirection="row" alignItems="center">
           <TaskName>{`${executionsCount}x`}</TaskName>
@@ -81,7 +84,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
         </Stack>
       </TaskInfo>
       <Difficulty>{coins}</Difficulty>
-    </Card>
+    </Container>
   );
 };
 
