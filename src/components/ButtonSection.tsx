@@ -35,17 +35,35 @@ const ContentSection = styled(ScrollView, {
 
 const ButtonContainer = styled(Stack, {
   // Styles for the button container
-  padding: 10,
+  padding: 0,
+  paddingHorizontal: 10,
   flexDirection: "row",
-  justifyContent: "space-between",
+  justifyContent: "space-between", // Space buttons evenly
 });
 
 const Container = styled(Stack, {
   // Styles for the outer container
   width: "100%",
-  borderWidth: 1,
+
   flexDirection: "column", // Stack children vertically
   flex: 1, // Ensure it fills the screen, adjust as necessary
+});
+
+const ButtonCustom = styled(Button, {
+  // Styles for the button
+  width: "31%",
+  borderRadius: 20,
+  padding: 5,
+  color: "white",
+  fontSize: 16,
+  fontWeight: "bold",
+  textAlign: "center",
+  justifyContent: "center",
+  alignItems: "center",
+  display: "flex",
+  flexDirection: "row",
+  borderWidth: 3,
+  borderColor: "#293558",
 });
 
 const getIconForType = (type: string) => {
@@ -152,30 +170,31 @@ const ButtonSection = () => {
   return (
     <Container>
       <ButtonContainer>
-        <Button
+        <ButtonCustom
           onPress={() => setActiveSection("HABITS")}
           style={{
-            backgroundColor: activeSection === "HABITS" ? "blue" : "grey",
+            backgroundColor: activeSection === "HABITS" ? "#293558" : "#3B577D",
           }}
         >
-          HABITS
-        </Button>
-        <Button
+          Habits
+        </ButtonCustom>
+        <ButtonCustom
           onPress={() => setActiveSection("CHALLENGES")}
           style={{
-            backgroundColor: activeSection === "CHALLENGES" ? "blue" : "grey",
+            backgroundColor:
+              activeSection === "CHALLENGES" ? "#293558" : "#3B577D",
           }}
         >
-          CHALLENGES
-        </Button>
-        <Button
+          Challenges
+        </ButtonCustom>
+        <ButtonCustom
           onPress={() => setActiveSection("GOALS")}
           style={{
-            backgroundColor: activeSection === "GOALS" ? "blue" : "grey",
+            backgroundColor: activeSection === "GOALS" ? "#293558" : "#3B577D",
           }}
         >
-          GOALS
-        </Button>
+          Goals
+        </ButtonCustom>
       </ButtonContainer>
 
       <SectionContainer>

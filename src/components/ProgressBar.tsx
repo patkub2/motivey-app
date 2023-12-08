@@ -34,6 +34,9 @@ const Label = styled(Text, {
   alignItems: "center",
   display: "flex",
   flexDirection: "row",
+  color: "white",
+  fontWeight: "bold",
+  fontSize: 12,
 });
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
@@ -42,17 +45,21 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   value,
   color,
   height,
-  borderColor = "transparent", // Default border color is transparent
-  showText = true, // Default value is true
+  borderColor = "transparent",
+  showText = true,
 }) => {
-  // Calculate width of the filler element as a percentage of the total width
   const widthPercentage = (value / maxValue) * 100;
-  const fillerWidth = `${widthPercentage}%`; // Use a string to set the width as a percentage
+  const fillerWidth = `${widthPercentage}%`;
+
+  // Determine label color based on widthPercentage
+  const labelColor = widthPercentage > 50 ? "white" : "black";
 
   return (
     <Container width={maxWidth} height={height} style={{ borderColor }}>
       <Filler style={{ width: fillerWidth, backgroundColor: color }} />
-      {showText && <Label>{`${value}/${maxValue}`}</Label>}
+      {showText && (
+        <Label style={{ color: labelColor }}>{`${value}/${maxValue}`}</Label>
+      )}
     </Container>
   );
 };

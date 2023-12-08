@@ -17,7 +17,7 @@ type User = {
 
 const UserStatsContainer = styled(Stack, {
   // Enhanced styles for the user stats container
-  padding: 10,
+  paddingHorizontal: 6,
   marginTop: 40, // Add top padding
   alignItems: "center", // Center the content
   flexDirection: "column",
@@ -86,8 +86,8 @@ const UserStats = () => {
               maxWidth={300}
               maxValue={user.maxExp}
               value={user.currentExp}
-              color="yellow"
-              height={20}
+              color="#D9B600"
+              height={25}
               showText={true}
             />
           </ProgressBarContainer>
@@ -96,7 +96,7 @@ const UserStats = () => {
               maxWidth={140}
               maxValue={user.maxHp}
               value={user.currentHp}
-              color="red"
+              color="#A81725"
               height={20}
               showText={true}
             />
@@ -105,7 +105,7 @@ const UserStats = () => {
               maxWidth={140}
               maxValue={user.maxMana}
               value={user.currentMana}
-              color="blue"
+              color="#1726A8"
               height={20}
               showText={true}
             />
@@ -143,7 +143,7 @@ const UserStats = () => {
         <Stack flex={2} alignItems="center" justifyContent="center">
           <Image
             source={require("../assets/armour/fox/SteelPlatedArmor.png")}
-            style={{ width: 200, height: 280, zIndex: -1 }}
+            style={{ width: 200, height: 290, zIndex: -1 }}
           />
         </Stack>
 
