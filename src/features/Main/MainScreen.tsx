@@ -6,44 +6,13 @@ import Icon from "../../components/Icon";
 import TaskCard from "../../components/TaskCard";
 import TamaguiButton from "../../components/TamaguiButton";
 import ButtonSection from "../../components/ButtonSection";
+import UserStats from "../../components/UserStats";
 
 const MainScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.welcomeText}>Welasdasdcome</Text>
-      <ProgressBar
-        maxWidth={180}
-        maxValue={180}
-        value={15}
-        color="#FFCC00"
-        height={20}
-      />
-      <StatCard
-        icon={
-          <Icon
-            source={require("../../assets/images/test.png")}
-            style={{ width: 50, height: 50 }}
-          />
-        }
-        stat="STR"
-        minValue={0}
-        maxValue={100}
-        value={50}
-        level={5}
-      />
-      <TamaguiButton text="Click me" color="#FFCC00" />
-      <TaskCard
-        executionsCount={12}
-        icon={
-          <Icon
-            source={require("../../assets/images/sword.png")}
-            style={{ width: 40, height: 40 }}
-          />
-        } // Replace with your actual icon component
-        name="10 Push ups"
-        description="some text"
-        difficultyLevel={3} // Renders 3 coin icons
-      />
+      <UserStats />
+
       <ButtonSection />
     </View>
   );
