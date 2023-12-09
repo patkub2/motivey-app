@@ -202,11 +202,13 @@ const ButtonSection = () => {
         {activeSection === "HABITS" && (
           <ContentSection horizontal={false}>
             {renderTasks("HABITS")}
+            <AddTaskButton />
           </ContentSection>
         )}
         {activeSection === "CHALLENGES" && (
           <ContentSection horizontal={false}>
             {renderTasks("CHALLENGES")}
+            <AddTaskButton />
           </ContentSection>
         )}
         {activeSection === "GOALS" && (

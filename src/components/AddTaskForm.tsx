@@ -2,6 +2,7 @@ import React, { useState, useContext, useMemo } from "react";
 import { Select, YStack, Button, Input, styled, Text, View } from "tamagui";
 import { AuthContext } from "../context/AuthContext";
 import CustomButton from "./CustomButton";
+import Toast from "react-native-toast-message";
 
 const sections = ["HABITS", "CHALLENGES", "GOALS"];
 const types = ["INT", "STR", "AGI", "VIT"];
@@ -21,7 +22,7 @@ const StyledLabel = styled(Text, {
   marginBottom: 10,
 });
 
-const AddTaskForm = () => {
+const AddTaskForm = ({ onClose }) => {
   const [name, setName] = useState("");
   const [section, setSection] = useState(sections[0]);
   const [difficultyLevel, setDifficultyLevel] = useState("1");
@@ -29,6 +30,15 @@ const AddTaskForm = () => {
   const { userToken } = useContext(AuthContext);
 
   const handleSubmit = async () => {
+    if (!name.trim()) {
+      Toast.show({
+        type: "error",
+        text1: "Validation Error",
+        text2: "Task name cannot be empty",
+      });
+      return;
+    }
+
     const taskData = {
       name,
       section,
@@ -52,23 +62,26 @@ const AddTaskForm = () => {
       if (!response.ok) {
         throw new Error("Failed to add task");
       }
+
+      Toast.show({
+        type: "success",
+        text1: "Task added successfully!",
+      });
+
+      onClose && onClose();
       // Handle successful task addition here
     } catch (error) {
       console.error("Error adding task:", error);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Failed to add task",
+      });
     }
   };
-  const difficultyOptions = useMemo(
-    () =>
-      ["1", "2", "3", "4", "5"].map((level, index) => ({
-        name: level,
-        value: level,
-        index,
-      })),
-    []
-  );
 
   return (
-    <YStack padding={10} justifyContent="space-around" height={"90%"}>
+    <YStack padding={10} justifyContent="space-around" width={"100%"}>
       <StyledLabel>Name of task:</StyledLabel>
       <StyledTextInput
         value={name}

@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import AppNavigator from "./src/navigation/AppNavigator";
 import MainScreen from "./src/features/Main/MainScreen";
 import { AuthContext } from "./src/context/AuthContext";
+import Toast from "react-native-toast-message";
 
 const AppContent = () => {
   const { userToken } = useContext(AuthContext); // userToken is null when not logged in

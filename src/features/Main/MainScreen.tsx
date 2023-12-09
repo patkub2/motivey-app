@@ -1,10 +1,8 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import ProgressBar from "../../components/ProgressBar";
-import StatCard from "../../components/StatCard";
+import { View, StyleSheet } from "react-native";
 import Icon from "../../components/Icon";
 import TaskCard from "../../components/TaskCard";
-import TamaguiButton from "../../components/TamaguiButton";
+
 import ButtonSection from "../../components/ButtonSection";
 import UserStats from "../../components/UserStats";
 
