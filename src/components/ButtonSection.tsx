@@ -5,6 +5,7 @@ import TaskCard from "./TaskCard";
 import { Swipeable } from "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { View } from "tamagui";
+import AddTaskButton from "./AddTaskButton";
 
 type Task = {
   id: number;
@@ -211,6 +212,7 @@ const ButtonSection = () => {
         {activeSection === "GOALS" && (
           <ContentSection horizontal={false}>
             {renderTasks("GOALS")}
+            <AddTaskButton />
           </ContentSection>
         )}
       </SectionContainer>
