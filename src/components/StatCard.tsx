@@ -12,7 +12,7 @@ type StatCardProps = {
 };
 
 const Card = styled(Stack, {
-  padding: 8,
+  padding: 6,
   marginTop: 8,
   borderRadius: 10,
   borderWidth: 3,

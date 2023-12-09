@@ -5,6 +5,12 @@ import { AuthContext } from "../context/AuthContext"; // Assuming you have this 
 import StatCard from "./StatCard";
 import Icon from "./Icon";
 
+type Stat = {
+  level: number;
+  currentExp: number;
+  maxExp: number;
+};
+
 type User = {
   characterLevel: number;
   maxExp: number;
@@ -13,6 +19,10 @@ type User = {
   currentHp: number;
   maxMana: number;
   currentMana: number;
+  intStat: Stat;
+  strStat: Stat;
+  agiStat: Stat;
+  vitStat: Stat;
 };
 
 const UserStatsContainer = styled(Stack, {
@@ -122,21 +132,21 @@ const UserStats = () => {
               />
             }
             stat="STR"
-            maxValue={100}
-            value={70}
-            level={10}
+            maxValue={user?.strStat.maxExp ?? 100}
+            value={user?.strStat.currentExp ?? 0}
+            level={user?.strStat.level ?? 1}
           />
           <StatCard
             icon={
               <Icon
-                source={require("../assets/images/sword.png")}
+                source={require("../assets/images/coinred.png")}
                 style={{ width: 40, height: 40 }}
               />
             }
             stat="AGI"
-            maxValue={100}
-            value={60}
-            level={10}
+            maxValue={user?.agiStat.maxExp ?? 100}
+            value={user?.agiStat.currentExp ?? 0}
+            level={user?.agiStat.level ?? 1}
           />
         </Stack>
 
@@ -151,26 +161,26 @@ const UserStats = () => {
           <StatCard
             icon={
               <Icon
-                source={require("../assets/images/sword.png")}
+                source={require("../assets/images/book.png")}
                 style={{ width: 40, height: 40 }}
               />
             }
             stat="INT"
-            maxValue={100}
-            value={80}
-            level={10}
+            maxValue={user?.intStat.maxExp ?? 100}
+            value={user?.intStat.currentExp ?? 0}
+            level={user?.intStat.level ?? 1}
           />
           <StatCard
             icon={
               <Icon
-                source={require("../assets/images/sword.png")}
+                source={require("../assets/images/potion.png")}
                 style={{ width: 40, height: 40 }}
               />
             }
             stat="VIT"
-            maxValue={100}
-            value={90}
-            level={10}
+            maxValue={user?.vitStat.maxExp ?? 100}
+            value={user?.vitStat.currentExp ?? 0}
+            level={user?.vitStat.level ?? 1}
           />
         </Stack>
       </HeroSectionContainer>
