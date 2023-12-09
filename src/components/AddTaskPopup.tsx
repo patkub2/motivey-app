@@ -1,10 +1,15 @@
 import React from "react";
-import { Modal, View, Text, Button } from "react-native";
+import { Modal, View } from "react-native";
+import { Button, YStack, styled } from "tamagui";
 import AddTaskForm from "./AddTaskForm";
 
 type AddTaskPopupProps = {
   onClose: () => void;
 };
+
+const StyledModalView = styled(View, {
+  padding: 20,
+});
 
 const AddTaskPopup: React.FC<AddTaskPopupProps> = ({ onClose }) => {
   return (
@@ -14,10 +19,12 @@ const AddTaskPopup: React.FC<AddTaskPopupProps> = ({ onClose }) => {
       animationType="slide"
       transparent={false}
     >
-      <View style={{ padding: 20 }}>
+      <StyledModalView>
         <AddTaskForm />
-        <Button title="Close" onPress={onClose} />
-      </View>
+        <YStack alignItems="center" margin={10}>
+          <Button onPress={onClose}>Close</Button>
+        </YStack>
+      </StyledModalView>
     </Modal>
   );
 };

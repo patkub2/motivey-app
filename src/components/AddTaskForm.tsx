@@ -1,12 +1,12 @@
 import React, { useState, useContext, useMemo } from "react";
-import { View, TextInput, Text, Button } from "react-native";
-import { Select, Sheet, YStack, styled } from "tamagui";
+import { Select, YStack, Button, Input, styled, Text, View } from "tamagui";
 import { AuthContext } from "../context/AuthContext";
+import CustomButton from "./CustomButton";
 
 const sections = ["HABITS", "CHALLENGES", "GOALS"];
 const types = ["INT", "STR", "AGI", "VIT"];
 
-const StyledTextInput = styled(TextInput, {
+const StyledTextInput = styled(Input, {
   borderWidth: 1,
   borderColor: "#DDDDDD",
   padding: 10,
@@ -16,9 +16,9 @@ const StyledTextInput = styled(TextInput, {
 
 const StyledLabel = styled(Text, {
   // fontWeight: "bold",
-  marginTop: 4,
+  marginTop: 20,
   alignSelf: "center",
-  marginBottom: 4,
+  marginBottom: 10,
 });
 
 const AddTaskForm = () => {
@@ -68,7 +68,7 @@ const AddTaskForm = () => {
   );
 
   return (
-    <YStack padding={20}>
+    <YStack padding={10} justifyContent="space-around" height={"90%"}>
       <StyledLabel>Name of task:</StyledLabel>
       <StyledTextInput
         value={name}
@@ -96,23 +96,16 @@ const AddTaskForm = () => {
       </Select>
 
       <StyledLabel>Difficulty Level:</StyledLabel>
-      <Select value={difficultyLevel} onValueChange={setDifficultyLevel}>
-        {difficultyOptions.map((item) => (
-          <Select.Item key={item.value} value={item.value} index={item.index}>
-            <Select.ItemText>{item.name}</Select.ItemText>
-            <Select.ItemIndicator>
-              <View
-                style={{
-                  width: 20,
-                  height: 20,
-                  borderRadius: 10,
-                  backgroundColor: "#D9B600",
-                }}
-              />
-            </Select.ItemIndicator>
-          </Select.Item>
+      <YStack flexDirection="row" justifyContent="center" space>
+        {["1", "2", "3", "4", "5"].map((level) => (
+          <CustomButton
+            key={level}
+            title={level}
+            onPress={() => setDifficultyLevel(level)}
+            selected={difficultyLevel === level}
+          />
         ))}
-      </Select>
+      </YStack>
 
       <StyledLabel>Type:</StyledLabel>
       <Select value={type} onValueChange={setType}>
@@ -133,7 +126,9 @@ const AddTaskForm = () => {
         ))}
       </Select>
 
-      <Button title="Add Task" onPress={handleSubmit} />
+      <Button onPress={handleSubmit} marginTop={20}>
+        Add Task
+      </Button>
     </YStack>
   );
 };
