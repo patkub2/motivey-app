@@ -3,6 +3,40 @@ import { Text, Button, YStack, styled } from "tamagui";
 import { AuthContext } from "../context/AuthContext"; // Import your AuthContext
 import { Modal } from "react-native";
 import { parseISO, differenceInSeconds } from "date-fns";
+
+const SkillContainer = styled(YStack, {
+  padding: 10,
+  borderRadius: 10,
+  backgroundColor: "#f0f0f0",
+  marginBottom: 10,
+  alignItems: "center",
+});
+
+const SkillName = styled(Text, {
+  fontSize: 18,
+  fontWeight: "bold",
+  marginBottom: 5,
+});
+
+const SkillDescription = styled(Text, {
+  fontSize: 14,
+  color: "#666",
+  marginBottom: 10,
+});
+
+const SkillButton = styled(Button, {
+  backgroundColor: "#4CAF50",
+  color: "white",
+  paddingVertical: 8,
+  paddingHorizontal: 20,
+  borderRadius: 5,
+});
+
+const SkillStatusText = styled(Text, {
+  marginTop: 5,
+  fontSize: 12,
+  color: "#FF5722",
+});
 interface Skill {
   name: string;
   description: string;
@@ -102,7 +136,8 @@ const SkillsModal = ({ visible, onClose }) => {
         prevSkills.map((skill) => {
           const activeAbility = activeAbilities.find(
             (a) =>
-              a.abilityType === skill.name.toUpperCase().replace(/\s/g, "_")
+              a.abilityType ===
+              skill.name.toUpperCase().replace(/[\s\u0027]/g, "_")
           );
           if (activeAbility) {
             const startTime = parseISO(activeAbility.startTime);
@@ -142,7 +177,8 @@ const SkillsModal = ({ visible, onClose }) => {
         prevSkills.map((skill) => {
           const cooldown = cooldowns.find(
             (c) =>
-              c.abilityType === skill.name.toUpperCase().replace(/\s/g, "_")
+              c.abilityType ===
+              skill.name.toUpperCase().replace(/[\s\u0027]/g, "_")
           );
           return cooldown
             ? { ...skill, remainingTime: cooldown.remainingCooldown }
@@ -157,7 +193,9 @@ const SkillsModal = ({ visible, onClose }) => {
   const activateSkill = async (skillName: string) => {
     try {
       // Convert skill name to uppercase and replace spaces with underscores
-      const formattedSkillName = skillName.toUpperCase().replace(/\s/g, "_");
+      const formattedSkillName = skillName
+        .toUpperCase()
+        .replace(/[\s\u0027]/g, "_");
 
       // Find the skill details from skillsData
       const skillDetails = skillsData.find((skill) => skill.name === skillName);
