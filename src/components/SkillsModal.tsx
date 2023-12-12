@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Text, Button, YStack, styled } from "tamagui";
 import { AuthContext } from "../context/AuthContext"; // Import your AuthContext
 import { Modal } from "react-native";
+import { parseISO, differenceInSeconds } from "date-fns";
 interface Skill {
   name: string;
   description: string;
@@ -59,6 +60,29 @@ const SkillsModal = ({ visible, onClose }) => {
   const [skills, setSkills] = useState<Skill[]>(skillsData);
   const { userToken } = useContext(AuthContext);
 
+  const updateRemainingTimes = () => {
+    setSkills((prevSkills) =>
+      prevSkills.map((skill) => {
+        // Ensure a default value of 0 if remainingTime is undefined
+        const remainingTime = skill.remainingTime ?? 0;
+
+        // Update remaining time for both active skills and cooldowns
+        if ((skill.isActive || remainingTime > 0) && remainingTime > 0) {
+          return { ...skill, remainingTime: remainingTime - 1 };
+        }
+        return skill;
+      })
+    );
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      updateRemainingTimes();
+    }, 1000); // Update every second
+
+    return () => clearInterval(intervalId); // Clean up interval on component unmount
+  }, []);
+
   const fetchActiveAbilities = async () => {
     try {
       const response = await fetch(
@@ -73,18 +97,26 @@ const SkillsModal = ({ visible, onClose }) => {
       }
 
       const activeAbilities = await response.json();
+      const currentTime = new Date();
       setSkills((prevSkills) =>
         prevSkills.map((skill) => {
           const activeAbility = activeAbilities.find(
-            (a) => a.abilityType === skill.name
+            (a) =>
+              a.abilityType === skill.name.toUpperCase().replace(/\s/g, "_")
           );
-          return activeAbility
-            ? {
-                ...skill,
-                isActive: true,
-                remainingTime: activeAbility.duration,
-              }
-            : skill;
+          if (activeAbility) {
+            const startTime = parseISO(activeAbility.startTime);
+            const durationInSeconds = differenceInSeconds(
+              startTime,
+              currentTime
+            );
+            return {
+              ...skill,
+              isActive: durationInSeconds > 0,
+              remainingTime: durationInSeconds,
+            };
+          }
+          return skill;
         })
       );
     } catch (error) {
@@ -108,14 +140,17 @@ const SkillsModal = ({ visible, onClose }) => {
       const cooldowns = await response.json();
       setSkills((prevSkills) =>
         prevSkills.map((skill) => {
-          const cooldown = cooldowns.find((c) => c.abilityType === skill.name);
+          const cooldown = cooldowns.find(
+            (c) =>
+              c.abilityType === skill.name.toUpperCase().replace(/\s/g, "_")
+          );
           return cooldown
             ? { ...skill, remainingTime: cooldown.remainingCooldown }
             : skill;
         })
       );
     } catch (error) {
-      console.error("Error fetching cooldowns:", error);
+      // Error handling
     }
   };
 
