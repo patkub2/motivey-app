@@ -30,6 +30,16 @@ const SkillButton = styled(Button, {
   paddingVertical: 8,
   paddingHorizontal: 20,
   borderRadius: 5,
+  variants: {
+    disabled: {
+      true: {
+        backgroundColor: "#A9A9A9", // Gray color when the button is disabled
+      },
+      false: {
+        backgroundColor: "#293558", // Original color when the button is not disabled
+      },
+    },
+  },
 });
 
 const SkillStatusText = styled(Text, {
@@ -67,8 +77,10 @@ interface Skill {
   name: string;
   description: string;
   cooldown: number; // in hours
+  activationDuration: number; // in hours
   isActive: boolean;
-  remainingTime?: number; // in seconds
+  remainingActivationTime?: number; // in seconds
+  remainingCooldown?: number; // in seconds
 }
 
 const skillsData: Skill[] = [
@@ -77,42 +89,49 @@ const skillsData: Skill[] = [
     description: "Boost VIT tasks",
     cooldown: 2, // 2 Hours cooldown
     isActive: false,
+    activationDuration: 1, // 1 Hour duration
   },
   {
     name: "Titan's Grip",
     description: "Enhance STR tasks",
     cooldown: 6, // 6 Hours cooldown
     isActive: false,
+    activationDuration: 2, // 1 Hour duration
   },
   {
     name: "Iron Resolve",
     description: "Better HP regeneration",
     cooldown: 12, // 12 Hours cooldown
     isActive: false,
+    activationDuration: 3, // 1 Hour duration
   },
   {
     name: "Wisdom Wave",
     description: "Boost INT tasks",
     cooldown: 5, // 5 Hours cooldown
     isActive: false,
+    activationDuration: 1, // 1 Hour duration
   },
   {
     name: "Arcane Insight",
     description: "Enhance mana regeneration",
     cooldown: 4, // 4 Hours cooldown
     isActive: false,
+    activationDuration: 5, // 1 Hour duration
   },
   {
     name: "Nimble Mind",
     description: "Boost AGI tasks",
     cooldown: 2, // 2 Hours cooldown
     isActive: false,
+    activationDuration: 1, // 1 Hour duration
   },
   {
     name: "Mind Surge",
     description: "Gain extra MP",
     cooldown: 3, // 3 Hours cooldown
     isActive: false,
+    activationDuration: 2, // 1 Hour duration
   },
 ];
 
@@ -129,14 +148,28 @@ const SkillsModal = ({ visible, onClose }) => {
   const updateRemainingTimes = () => {
     setSkills((prevSkills) =>
       prevSkills.map((skill) => {
-        // Ensure a default value of 0 if remainingTime is undefined
-        const remainingTime = skill.remainingTime ?? 0;
+        const updatedSkill = { ...skill };
 
-        // Update remaining time for both active skills and cooldowns
-        if ((skill.isActive || remainingTime > 0) && remainingTime > 0) {
-          return { ...skill, remainingTime: remainingTime - 1 };
+        // Check if remainingActivationTime is defined and greater than 0
+        if (
+          updatedSkill.remainingActivationTime &&
+          updatedSkill.remainingActivationTime > 0
+        ) {
+          updatedSkill.remainingActivationTime -= 1;
+          updatedSkill.isActive = updatedSkill.remainingActivationTime > 0;
+        } else {
+          updatedSkill.isActive = false; // Deactivate if remaining time is not positive
         }
-        return skill;
+
+        // Check if remainingCooldown is defined and greater than 0
+        if (
+          updatedSkill.remainingCooldown &&
+          updatedSkill.remainingCooldown > 0
+        ) {
+          updatedSkill.remainingCooldown -= 1;
+        }
+
+        return updatedSkill;
       })
     );
   };
@@ -173,17 +206,20 @@ const SkillsModal = ({ visible, onClose }) => {
           );
           if (activeAbility) {
             const startTime = parseISO(activeAbility.startTime);
-            const durationInSeconds = differenceInSeconds(
-              startTime,
+            const activationEndTime = new Date(
+              startTime.getTime() + skill.activationDuration * 3600000
+            );
+            const remainingActivationTime = differenceInSeconds(
+              activationEndTime,
               currentTime
             );
             return {
               ...skill,
-              isActive: durationInSeconds > 0,
-              remainingTime: durationInSeconds,
+              isActive: remainingActivationTime > 0,
+              remainingActivationTime,
             };
           }
-          return skill;
+          return { ...skill, isActive: false, remainingActivationTime: 0 };
         })
       );
     } catch (error) {
@@ -212,19 +248,21 @@ const SkillsModal = ({ visible, onClose }) => {
               c.abilityType ===
               skill.name.toUpperCase().replace(/[\s\u0027]/g, "_")
           );
-          return cooldown
-            ? { ...skill, remainingTime: cooldown.remainingCooldown }
-            : skill;
+          if (cooldown) {
+            return { ...skill, remainingCooldown: cooldown.remainingCooldown };
+          }
+          return skill;
         })
       );
     } catch (error) {
-      // Error handling
+      console.error("Error fetching cooldowns:", error);
     }
   };
 
   const activateSkill = async (skillName: string) => {
     try {
       // Convert skill name to uppercase and replace spaces with underscores
+
       const formattedSkillName = skillName
         .toUpperCase()
         .replace(/[\s\u0027]/g, "_");
@@ -236,16 +274,7 @@ const SkillsModal = ({ visible, onClose }) => {
         console.error("Skill details not found for:", skillName);
         return;
       }
-      console.log(
-        "skillDetails",
-        JSON.stringify({
-          abilityType: formattedSkillName,
-          effectMagnitude: 10, // You might want to update this based on specific skill details
-          duration: `PT${skillDetails.cooldown}H`, // Using the cooldown as the duration (assuming 1 hour per cooldown unit)
-          cooldown: `PT${skillDetails.cooldown * 2}M`, // Example calculation for cooldown
-          manaCost: 0, // Assuming zero mana cost, update if needed
-        })
-      );
+
       const response = await fetch(
         "http://192.168.0.115:8080/api/activate-ability",
         {
@@ -257,8 +286,8 @@ const SkillsModal = ({ visible, onClose }) => {
           body: JSON.stringify({
             abilityType: formattedSkillName,
             effectMagnitude: 10, // You might want to update this based on specific skill details
-            duration: `PT${skillDetails.cooldown}H`, // Using the cooldown as the duration (assuming 1 hour per cooldown unit)
-            cooldown: `PT${skillDetails.cooldown * 2}H`, // Example calculation for cooldown
+            duration: `PT${skillDetails.activationDuration}H`, // Using the cooldown as the duration (assuming 1 hour per cooldown unit)
+            cooldown: `PT${skillDetails.cooldown}H`, // Example calculation for cooldown
             manaCost: 0, // Assuming zero mana cost, update if needed
           }),
         }
@@ -267,7 +296,18 @@ const SkillsModal = ({ visible, onClose }) => {
       if (!response.ok) {
         throw new Error("Failed to activate ability");
       }
-
+      setSkills((prevSkills) =>
+        prevSkills.map((skill) =>
+          skill.name === skillName
+            ? {
+                ...skill,
+                isActive: true,
+                remainingActivationTime: skillDetails.activationDuration * 3600,
+                remainingCooldown: skillDetails.cooldown * 3600,
+              }
+            : skill
+        )
+      );
       const result = await response.text();
       console.log(result);
       await fetchActiveAbilities();
@@ -296,19 +336,19 @@ const SkillsModal = ({ visible, onClose }) => {
               <SkillName>{skill.name}</SkillName>
               <SkillDescription>{skill.description}</SkillDescription>
               <SkillButton
-                disabled={skill.isActive || (skill.remainingTime ?? 0) > 0}
+                disabled={skill.isActive || (skill.remainingCooldown ?? 0) > 0}
                 onPress={() => activateSkill(skill.name)}
               >
                 Activate
               </SkillButton>
               {skill.isActive && (
                 <SkillStatusText>
-                  Active for: {formatTime(skill.remainingTime ?? 0)}
+                  Active for: {formatTime(skill.remainingActivationTime ?? 0)}
                 </SkillStatusText>
               )}
-              {skill.remainingTime && skill.remainingTime > 0 && (
+              {skill.remainingCooldown && skill.remainingCooldown > 0 && (
                 <SkillStatusText>
-                  Cooldown: {formatTime(skill.remainingTime)}
+                  Cooldown: {formatTime(skill.remainingCooldown)}
                 </SkillStatusText>
               )}
             </SkillItem>
