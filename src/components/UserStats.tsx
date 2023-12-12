@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Image, Stack, styled, Text } from "tamagui";
+import { Button, Image, Stack, styled, Text } from "tamagui";
 import ProgressBar from "./ProgressBar"; // Import your ProgressBar component
 import { AuthContext } from "../context/AuthContext"; // Assuming you have this context
 import StatCard from "./StatCard";
 import Icon from "./Icon";
 import { GlobalContext } from "../context/GlobalContext"; // Import GlobalContext
+import OptionsModal from "./OptionsModal";
 
 type Stat = {
   level: number;
@@ -62,6 +63,7 @@ const HeroSectionContainer = styled(Stack, {
 });
 
 const UserStats = () => {
+  const [modalVisible, setModalVisible] = useState(false);
   const { user, fetchUserData } = useContext(GlobalContext);
   const { userToken } = useContext(AuthContext);
 
@@ -73,6 +75,11 @@ const UserStats = () => {
 
   return (
     <UserStatsContainer>
+      <Button onPress={() => setModalVisible(true)}>Show Options</Button>
+      <OptionsModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+      />
       {user && (
         <>
           <ProgressBarContainer>
