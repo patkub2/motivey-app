@@ -1,12 +1,24 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import Icon from "../../components/Icon";
-import TaskCard from "../../components/TaskCard";
-
 import ButtonSection from "../../components/ButtonSection";
 import UserStats from "../../components/UserStats";
+import BottomMenu from "../../components/BottomMenu";
+import { RootStackParamList } from "../../types/navigation";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { useNavigation } from "@react-navigation/native";
 
-const MainScreen = () => {
+type RegisterScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "Main"
+>;
+
+type Props = {
+  navigation: RegisterScreenNavigationProp;
+};
+
+const MainScreen: React.FC<Props> = () => {
+  const navigation = useNavigation();
+  console.log(navigation + " main screen");
   return (
     <View style={styles.container}>
       <UserStats />

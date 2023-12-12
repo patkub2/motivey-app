@@ -22,20 +22,34 @@ type Props = {
 };
 
 const LoginScreen: React.FC<Props> = ({ navigation }) => {
+  console.log(navigation);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { signIn } = useContext(AuthContext);
 
-  const handleLogin = () => {
-    signIn(email, password);
+  const handleLogin = async () => {
+    const success = await signIn(email, password);
+    if (success) {
+      navigation.navigate("Main");
+    } else {
+      // Handle login failure (e.g., show an error message)
+    }
   };
 
-  const handleLoginDev = () => {
-    signIn("test@test.com", "test");
+  const handleLoginDev = async () => {
+    const success = await signIn("test@test.com", "test");
+    if (success) {
+      navigation.navigate("Main");
+    } else {
+      // Handle login failure (e.g., show an error message)
+    }
   };
   return (
     <View style={styles.container}>
-      <Image source={require("../../../assets/icon.png")} style={styles.logo} />
+      <Image
+        source={require("../../assets/images/sword.png")}
+        style={styles.logo}
+      />
       <TextInput
         placeholder="Email"
         value={email}

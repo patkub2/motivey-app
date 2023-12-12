@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "../features/Login/LoginScreen";
 import MainScreen from "../features/Main/MainScreen";
 import RegisterScreen from "../features/Register/RegisterScreen";
+import OptionsScreen from "../features/Options/OptionsScreen"; // Import the OptionsScreen
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +17,7 @@ const AppNavigator = () => {
       />
       <Stack.Screen name="Register" component={RegisterScreen} />
       <Stack.Screen name="Main" component={MainScreen} />
+      <Stack.Screen name="Options" component={OptionsScreen} />
     </Stack.Navigator>
   );
 };

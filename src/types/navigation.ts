@@ -1,5 +1,7 @@
 export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
-  // ... other screens
+  Main: undefined;
+  Options: undefined;
+  SkillTree: undefined;
 };

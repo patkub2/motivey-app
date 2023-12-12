@@ -4,14 +4,14 @@ import * as SecureStore from "expo-secure-store";
 
 interface AuthContextType {
   userToken: string | null;
-  signIn: (email: string, password: string) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<boolean>;
   signOut: () => Promise<void>;
   signUp: (name: string, email: string, password: string) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType>({
   userToken: null,
-  signIn: async () => {},
+  signIn: async () => false,
   signOut: async () => {},
   signUp: async () => {},
 });
@@ -50,9 +50,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       } else {
         throw new Error("Invalid token format");
       }
+      return true; // Return true for further handling (if needed)
     } catch (error) {
       console.error("Login error:", error);
       // Handle login errors appropriately
+      return false;
     }
   };
 
