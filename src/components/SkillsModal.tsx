@@ -25,7 +25,7 @@ const SkillDescription = styled(Text, {
 });
 
 const SkillButton = styled(Button, {
-  backgroundColor: "#4CAF50",
+  backgroundColor: "#293558",
   color: "white",
   paddingVertical: 8,
   paddingHorizontal: 20,
@@ -36,6 +36,32 @@ const SkillStatusText = styled(Text, {
   marginTop: 5,
   fontSize: 12,
   color: "#FF5722",
+});
+
+const SkillsGrid = styled(YStack, {
+  flexDirection: "row",
+  flexWrap: "wrap",
+  justifyContent: "space-between",
+  width: "100%", // Ensures the grid takes the full width
+});
+
+const SkillItem = styled(YStack, {
+  width: "48%", // Adjust the width for two items per row
+  padding: 10,
+  borderRadius: 10,
+  backgroundColor: "#f0f0f0",
+  marginBottom: 10,
+  alignItems: "center",
+});
+
+const FullWidthButton = styled(Button, {
+  width: "100%", // Button takes full width
+  backgroundColor: "#666",
+  color: "white",
+  paddingVertical: 8,
+  paddingHorizontal: 20,
+  borderRadius: 5,
+  marginTop: 10,
 });
 interface Skill {
   name: string;
@@ -89,6 +115,12 @@ const skillsData: Skill[] = [
     isActive: false,
   },
 ];
+
+const formatTime = (seconds) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  return `${hours > 0 ? `${hours}h ` : ""}${minutes}m`;
+};
 
 const SkillsModal = ({ visible, onClose }) => {
   const [skills, setSkills] = useState<Skill[]>(skillsData);
@@ -257,27 +289,32 @@ const SkillsModal = ({ visible, onClose }) => {
       visible={visible}
       onRequestClose={onClose}
     >
-      <YStack>
-        {skills.map((skill) => (
-          <YStack key={skill.name}>
-            <Text>{skill.name}</Text>
-            <Text>{skill.description}</Text>
-            <Button
-              disabled={skill.isActive || (skill.remainingTime ?? 0) > 0}
-              onPress={() => activateSkill(skill.name)}
-            >
-              Activate
-            </Button>
-            {skill.isActive && (
-              <Text>Active for: {skill.remainingTime ?? 0} seconds</Text>
-            )}
-            {skill.remainingTime && skill.remainingTime > 0 && (
-              <Text>Cooldown: {skill.remainingTime} seconds</Text>
-            )}
-          </YStack>
-        ))}
-
-        <Button onPress={onClose}>Close</Button>
+      <YStack padding={20} alignItems="center" space>
+        <SkillsGrid>
+          {skills.map((skill) => (
+            <SkillItem key={skill.name}>
+              <SkillName>{skill.name}</SkillName>
+              <SkillDescription>{skill.description}</SkillDescription>
+              <SkillButton
+                disabled={skill.isActive || (skill.remainingTime ?? 0) > 0}
+                onPress={() => activateSkill(skill.name)}
+              >
+                Activate
+              </SkillButton>
+              {skill.isActive && (
+                <SkillStatusText>
+                  Active for: {formatTime(skill.remainingTime ?? 0)}
+                </SkillStatusText>
+              )}
+              {skill.remainingTime && skill.remainingTime > 0 && (
+                <SkillStatusText>
+                  Cooldown: {formatTime(skill.remainingTime)}
+                </SkillStatusText>
+              )}
+            </SkillItem>
+          ))}
+        </SkillsGrid>
+        <FullWidthButton onPress={onClose}>Close</FullWidthButton>
       </YStack>
     </Modal>
   );
