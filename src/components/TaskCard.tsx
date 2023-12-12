@@ -5,12 +5,11 @@ type TaskCardProps = {
   executionsCount: number;
   icon: React.ReactNode; // This allows you to pass any React element as an icon
   name: string; // The name of the task, e.g., "10 Push ups"
-  description: string; // A short description of the task
   difficultyLevel: number; // Difficulty level indicated by the number of coins
 };
 
 const Card = styled(Stack, {
-  padding: 10,
+  padding: 15,
   borderRadius: 8,
   borderWidth: 3,
   borderColor: "#E0E0E0",
@@ -63,7 +62,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
   executionsCount,
   icon,
   name,
-  description,
   difficultyLevel,
 }) => {
   // Create an array of coins based on the difficulty level
@@ -79,7 +77,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
           {icon}
           <TaskContainer>
             <TaskName>{`${name}`}</TaskName>
-            <TaskDescription>{description}</TaskDescription>
           </TaskContainer>
         </Stack>
       </TaskInfo>

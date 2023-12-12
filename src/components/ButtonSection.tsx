@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
-import { Button, Stack, styled, Text, ScrollView, Image } from "tamagui";
-import { AuthContext } from "../context/AuthContext"; // You'll need to implement this
+import React, { useContext, useEffect, useState } from "react";
+import { Button, Stack, styled, ScrollView, Image } from "tamagui";
 import TaskCard from "./TaskCard";
 import { Swipeable } from "react-native-gesture-handler";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { View } from "tamagui";
 import AddTaskButton from "./AddTaskButton";
+import { GlobalContext } from "../context/GlobalContext"; // Import GlobalContext
+import { AuthContext } from "../context/AuthContext"; // Import AuthContext
+import { View } from "tamagui";
 
 type Task = {
   id: number;
@@ -22,20 +22,16 @@ type Task = {
 type Section = "HABITS" | "CHALLENGES" | "GOALS";
 
 const SectionContainer = styled(Stack, {
-  // Styles for your section container
   padding: 10,
   width: "100%",
-  // Ensure the container takes up the full available height minus the button container height
   flex: 1,
 });
 
 const ContentSection = styled(ScrollView, {
-  // Styles for the scrollable content section
   height: 200, // Set a static height for the content section
 });
 
 const ButtonContainer = styled(Stack, {
-  // Styles for the button container
   padding: 0,
   paddingHorizontal: 10,
   flexDirection: "row",
@@ -43,9 +39,7 @@ const ButtonContainer = styled(Stack, {
 });
 
 const Container = styled(Stack, {
-  // Styles for the outer container
   width: "100%",
-
   flexDirection: "column", // Stack children vertically
   flex: 1, // Ensure it fills the screen, adjust as necessary
 });
@@ -84,88 +78,24 @@ const getIconForType = (type: string) => {
 
 const ButtonSection = () => {
   const [activeSection, setActiveSection] = useState<Section>("HABITS");
-  const [tasks, setTasks] = useState<Task[]>([]);
   const { userToken } = useContext(AuthContext);
-
-  const fetchTasks = useCallback(async () => {
-    if (!userToken) return;
-
-    try {
-      const response = await fetch("http://192.168.0.115:8080/api/tasks", {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      });
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP status ${response.status}: ${errorText}`);
-      }
-      const tasksData: Task[] = await response.json();
-      setTasks(tasksData);
-    } catch (error) {
-      console.error("Error fetching tasks:", error.message);
-    }
-  }, [userToken]);
+  const { tasks, fetchTasks, incrementTaskCounter } = useContext(GlobalContext);
 
   useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
+    if (userToken) {
+      fetchTasks(userToken);
+    }
+  }, [fetchTasks, userToken]);
 
   const handleSwipeRight = async (taskId: number) => {
-    try {
-      const response = await fetch(
-        `http://192.168.0.115:8080/api/task/${taskId}/increment-counter`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to increment counter");
-      }
-      await fetchTasks();
-    } catch (error) {
-      console.error("Error incrementing counter:", error);
+    if (userToken) {
+      await incrementTaskCounter(taskId, userToken);
     }
   };
 
   const renderRightActions = () => {
     // Return an empty view or a view with desired width to control swipe distance
     return <View style={{ width: 1 }}></View>;
-  };
-
-  const renderTasks = (section: Section) => {
-    return tasks
-      .filter((task) => task.section === section)
-      .map((task) => (
-        <Swipeable
-          key={task.id}
-          renderRightActions={renderRightActions}
-          onSwipeableOpen={(direction) => {
-            if (direction == "right") {
-              console.log("Swiped right" + task.id);
-              handleSwipeRight(task.id);
-            }
-          }}
-          friction={2}
-        >
-          <TaskCard
-            executionsCount={task.dailyExecutionCounter}
-            icon={
-              <Image
-                source={getIconForType(task.type)}
-                style={{ width: 30, marginHorizontal: 5, height: 30 }}
-                resizeMode="center"
-              />
-            }
-            name={task.name}
-            description="test"
-            difficultyLevel={task.difficultyLevel}
-          />
-        </Swipeable>
-      ));
   };
 
   return (
@@ -199,24 +129,42 @@ const ButtonSection = () => {
       </ButtonContainer>
 
       <SectionContainer>
-        {activeSection === "HABITS" && (
-          <ContentSection horizontal={false}>
-            {renderTasks("HABITS")}
+        {["HABITS", "CHALLENGES", "GOALS"].map((section) => (
+          <ContentSection
+            key={section}
+            horizontal={false}
+            display={activeSection === section ? "flex" : "none"}
+          >
+            {tasks
+              .filter((task) => task.section === section)
+              .map((task) => (
+                <Swipeable
+                  key={task.id}
+                  renderRightActions={renderRightActions}
+                  onSwipeableOpen={(direction) => {
+                    if (direction === "right") {
+                      handleSwipeRight(task.id);
+                    }
+                  }}
+                  friction={2}
+                >
+                  <TaskCard
+                    executionsCount={task.dailyExecutionCounter}
+                    icon={
+                      <Image
+                        source={getIconForType(task.type)}
+                        style={{ width: 30, marginHorizontal: 5, height: 30 }}
+                        resizeMode="center"
+                      />
+                    }
+                    name={task.name}
+                    difficultyLevel={task.difficultyLevel}
+                  />
+                </Swipeable>
+              ))}
             <AddTaskButton />
           </ContentSection>
-        )}
-        {activeSection === "CHALLENGES" && (
-          <ContentSection horizontal={false}>
-            {renderTasks("CHALLENGES")}
-            <AddTaskButton />
-          </ContentSection>
-        )}
-        {activeSection === "GOALS" && (
-          <ContentSection horizontal={false}>
-            {renderTasks("GOALS")}
-            <AddTaskButton />
-          </ContentSection>
-        )}
+        ))}
       </SectionContainer>
     </Container>
   );

@@ -4,6 +4,7 @@ import ProgressBar from "./ProgressBar"; // Import your ProgressBar component
 import { AuthContext } from "../context/AuthContext"; // Assuming you have this context
 import StatCard from "./StatCard";
 import Icon from "./Icon";
+import { GlobalContext } from "../context/GlobalContext"; // Import GlobalContext
 
 type Stat = {
   level: number;
@@ -61,31 +62,14 @@ const HeroSectionContainer = styled(Stack, {
 });
 
 const UserStats = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const { user, fetchUserData } = useContext(GlobalContext);
   const { userToken } = useContext(AuthContext);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch("http://192.168.0.115:8080/api/user", {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        });
-        if (!response.ok) {
-          throw new Error("Failed to fetch user data");
-        }
-        const userData: User = await response.json();
-        setUser(userData);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
     if (userToken) {
-      fetchUserData();
+      fetchUserData(userToken);
     }
-  }, [userToken]);
+  }, [fetchUserData, userToken]);
 
   return (
     <UserStatsContainer>

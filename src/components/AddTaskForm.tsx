@@ -3,6 +3,7 @@ import { Select, YStack, Button, Input, styled, Text, View } from "tamagui";
 import { AuthContext } from "../context/AuthContext";
 import CustomButton from "./CustomButton";
 import Toast from "react-native-toast-message";
+import { GlobalContext } from "../context/GlobalContext";
 
 const sections = ["HABITS", "CHALLENGES", "GOALS"];
 const types = ["INT", "STR", "AGI", "VIT"];
@@ -28,6 +29,7 @@ const AddTaskForm = ({ onClose }) => {
   const [difficultyLevel, setDifficultyLevel] = useState("1");
   const [type, setType] = useState(types[0]);
   const { userToken } = useContext(AuthContext);
+  const { fetchTasks, fetchUserData } = useContext(GlobalContext);
 
   const handleSubmit = async () => {
     if (!name.trim()) {
@@ -48,7 +50,6 @@ const AddTaskForm = ({ onClose }) => {
       type,
     };
 
-    // POST request to add task
     try {
       const response = await fetch("http://192.168.0.115:8080/api/task/add", {
         method: "POST",
@@ -68,8 +69,11 @@ const AddTaskForm = ({ onClose }) => {
         text1: "Task added successfully!",
       });
 
-      onClose && onClose();
-      // Handle successful task addition here
+      // Refresh task list and user information
+      await fetchTasks(userToken as string);
+      await fetchUserData(userToken as string);
+
+      onClose && onClose(); // Close the form if the callback is provided
     } catch (error) {
       console.error("Error adding task:", error);
       Toast.show({

@@ -7,6 +7,7 @@ import config from "./tamagui.config";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { GlobalProvider } from "./src/context/GlobalContext";
 import Toast from "react-native-toast-message";
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -26,9 +27,11 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <AuthProvider>
-        <TamaguiProvider config={config}>
-          <AppContent />
-        </TamaguiProvider>
+        <GlobalProvider>
+          <TamaguiProvider config={config}>
+            <AppContent />
+          </TamaguiProvider>
+        </GlobalProvider>
       </AuthProvider>
       <Toast />
     </GestureHandlerRootView>
