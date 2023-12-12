@@ -6,6 +6,7 @@ import StatCard from "./StatCard";
 import Icon from "./Icon";
 import { GlobalContext } from "../context/GlobalContext"; // Import GlobalContext
 import OptionsModal from "./OptionsModal";
+import SkillsModal from "./SkillsModal";
 
 type Stat = {
   level: number;
@@ -45,6 +46,9 @@ const ProgressBarContainer = styled(Stack, {
   // Container for individual progress bars
   width: "100%",
   marginBottom: 5, // Add margin at the bottom
+  flexDirection: "row", // Align elements horizontally
+  display: "flex",
+  justifyContent: "space-evenly",
 });
 
 const StatsRow = styled(Stack, {
@@ -53,6 +57,7 @@ const StatsRow = styled(Stack, {
   justifyContent: "space-evenly", // Space elements evenly
   width: "100%",
   marginTop: 5, // Add top margin for spacing
+
   // borderWidth: 1,
 });
 
@@ -63,6 +68,7 @@ const HeroSectionContainer = styled(Stack, {
 });
 
 const UserStats = () => {
+  const [skillsModalVisible, setSkillsModalVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const { user, fetchUserData } = useContext(GlobalContext);
   const { userToken } = useContext(AuthContext);
@@ -75,14 +81,23 @@ const UserStats = () => {
 
   return (
     <UserStatsContainer>
-      <Button onPress={() => setModalVisible(true)}>Show Options</Button>
-      <OptionsModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-      />
       {user && (
         <>
           <ProgressBarContainer>
+            <Button
+              onPress={() => setSkillsModalVisible(true)}
+              width={20}
+              height={25}
+            >
+              <Icon
+                source={require("../assets/images/shield.png")}
+                style={{ width: 25, height: 25 }}
+              />
+            </Button>
+            <SkillsModal
+              visible={skillsModalVisible}
+              onClose={() => setSkillsModalVisible(false)}
+            />
             <ProgressBar
               maxWidth={300}
               maxValue={user.maxExp}
@@ -90,6 +105,20 @@ const UserStats = () => {
               color="#D9B600"
               height={25}
               showText={true}
+            />
+            <Button
+              onPress={() => setModalVisible(true)}
+              width={20}
+              height={25}
+            >
+              <Icon
+                source={require("../assets/images/setting-icon.png")}
+                style={{ width: 20, height: 20 }}
+              />
+            </Button>
+            <OptionsModal
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
             />
           </ProgressBarContainer>
           <StatsRow>
