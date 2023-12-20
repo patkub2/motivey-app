@@ -87,51 +87,58 @@ const skillsData: Skill[] = [
   {
     name: "Life's Bounty",
     description: "Boost VIT tasks",
-    cooldown: 2, // 2 Hours cooldown
+    cooldown: 2,
     isActive: false,
-    activationDuration: 1, // 1 Hour duration
+    activationDuration: 1,
   },
   {
     name: "Titan's Grip",
     description: "Enhance STR tasks",
-    cooldown: 6, // 6 Hours cooldown
+    cooldown: 6,
     isActive: false,
-    activationDuration: 2, // 1 Hour duration
+    activationDuration: 2,
   },
   {
     name: "Iron Resolve",
     description: "Better HP regeneration",
-    cooldown: 12, // 12 Hours cooldown
+    cooldown: 12,
     isActive: false,
-    activationDuration: 3, // 1 Hour duration
+    activationDuration: 3,
   },
   {
     name: "Wisdom Wave",
     description: "Boost INT tasks",
-    cooldown: 5, // 5 Hours cooldown
+    cooldown: 5,
     isActive: false,
-    activationDuration: 1, // 1 Hour duration
+    activationDuration: 1,
   },
   {
     name: "Arcane Insight",
     description: "Enhance mana regeneration",
-    cooldown: 4, // 4 Hours cooldown
+    cooldown: 4,
     isActive: false,
-    activationDuration: 5, // 1 Hour duration
+    activationDuration: 5,
   },
   {
     name: "Nimble Mind",
     description: "Boost AGI tasks",
-    cooldown: 2, // 2 Hours cooldown
+    cooldown: 2,
     isActive: false,
-    activationDuration: 1, // 1 Hour duration
+    activationDuration: 1,
   },
   {
     name: "Mind Surge",
-    description: "Gain extra MP",
-    cooldown: 3, // 3 Hours cooldown
+    description: "Gain 50extra MP",
+    cooldown: 3,
     isActive: false,
-    activationDuration: 2, // 1 Hour duration
+    activationDuration: 0,
+  },
+  {
+    name: "Steadfast",
+    description: "Gain 50 extra HP",
+    cooldown: 3,
+    isActive: false,
+    activationDuration: 0,
   },
 ];
 
