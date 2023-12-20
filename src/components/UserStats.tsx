@@ -14,20 +14,6 @@ type Stat = {
   maxExp: number;
 };
 
-type User = {
-  characterLevel: number;
-  maxExp: number;
-  currentExp: number;
-  maxHp: number;
-  currentHp: number;
-  maxMana: number;
-  currentMana: number;
-  intStat: Stat;
-  strStat: Stat;
-  agiStat: Stat;
-  vitStat: Stat;
-};
-
 const UserStatsContainer = styled(Stack, {
   // Enhanced styles for the user stats container
   paddingHorizontal: 6,
@@ -70,6 +56,9 @@ const HeroSectionContainer = styled(Stack, {
 const UserStats = () => {
   const [skillsModalVisible, setSkillsModalVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [armour, setArmour] = useState(
+    "../assets/armour/fox/SteelPlatedArmor.png"
+  );
   const { user, fetchUserData } = useContext(GlobalContext);
   const { userToken } = useContext(AuthContext);
 
@@ -78,6 +67,14 @@ const UserStats = () => {
       fetchUserData(userToken);
     }
   }, [fetchUserData, userToken]);
+
+  const armorImages = {
+    "Adventurer Cloths, Medieval": require("../assets/armour/fox/AdventurerClothsMedieval.png"),
+    "Leather Armour": require("../assets/armour/fox/LeatherArmour.png"),
+    "Basic Iron Chainmail": require("../assets/armour/fox/BasicIronChainmail.png"),
+    "Steel Plated Armor": require("../assets/armour/fox/SteelPlatedArmor.png"),
+    "Crystalline Vanguard Armour": require("../assets/armour/fox/CrystallineVanguardArmour.png"),
+  };
 
   return (
     <UserStatsContainer>
@@ -169,10 +166,9 @@ const UserStats = () => {
             level={user?.agiStat.level ?? 1}
           />
         </Stack>
-
         <Stack flex={2} alignItems="center" justifyContent="center">
           <Image
-            source={require("../assets/armour/fox/SteelPlatedArmor.png")}
+            source={armorImages[String(user?.currentArmorId)]}
             style={{ width: 200, height: 290, zIndex: -1 }}
           />
         </Stack>

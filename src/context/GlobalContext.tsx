@@ -15,6 +15,7 @@ type User = {
   currentHp: number;
   maxMana: number;
   currentMana: number;
+  currentArmorId: String;
   intStat: Stat;
   strStat: Stat;
   agiStat: Stat;
